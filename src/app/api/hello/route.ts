@@ -12,7 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function GET(request: Request) {
   const feedUrl = 'https://www.upwork.com/ab/feed/jobs/rss?q=web+design&user_location_match=1&sort=recency&paging=0%3B10&api_params=1&securityToken=1480d28b8c9192afef5994366f86aeb9593b6b3caaac0164e0959a94754865db67903bebb8e572475fb3c337fe1dcd6e5136758579fa2db13350b0dd9b5614ce&userUid=1566080122037977088&orgUid=1566080122037977089';
-  const interval = 300 * 60 * 1000; // 30 minutes in milliseconds
+  const interval = 30 * 60 * 1000; // 30 minutes in milliseconds
 
   async function sendEmail({proposal,
     job_summary, 
