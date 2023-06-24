@@ -70,7 +70,7 @@ export async function GET(request: Request) {
       });
       console.log(completion.data.choices[0].message)
       if (!completion?.data?.choices[0]?.message?.content) return;
-      const { suitable, job_summary, job_url, proposal}: { suitable: boolean, job_summary: string, job_url: string, proposal: string} = JSON.parse(completion.data.choices[0].message.content)
+      const { suitable, job_summary, job_url, proposal, reason}: { suitable: boolean, job_summary: string, job_url: string, proposal: string, reason: string} = JSON.parse(completion.data.choices[0].message.content)
       if (suitable) {
           sendEmail({
               proposal,
@@ -79,7 +79,7 @@ export async function GET(request: Request) {
           });
       } else {
         sendEmail({
-          proposal: "not suitable",
+          proposal: `not suitable for the following reason: ${reason}`,
           job_summary, 
           job_url
         });
