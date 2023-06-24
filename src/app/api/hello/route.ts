@@ -20,7 +20,7 @@ export async function GET(request: Request) {
       job_summary: string,
       job_url: string}) {
       resend.emails.send({
-          from: 'onboarding@resend.dev',
+          from: 'finn@finnelliott.com',
           to: 'finn@finnelliott.com',
           subject: 'Hello World',
           html: JSON.stringify({
@@ -77,6 +77,12 @@ export async function GET(request: Request) {
               job_summary, 
               job_url
           });
+      } else {
+        sendEmail({
+          proposal: "not suitable",
+          job_summary, 
+          job_url
+        });
       }
       return;
   }
