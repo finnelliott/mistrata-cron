@@ -27,7 +27,10 @@ async function checkForNewItems(feedUrl: string, interval: number) {
         checkSuitability(item);
       }
     });
-} catch (error) { console.log(error); } }
+} catch (error) {
+  console.error('Error in checkForNewItems:', error);
+}
+}
 
 async function checkSuitability(item: string) {
   console.log(JSON.stringify(item))
@@ -109,7 +112,7 @@ async function checkSuitability(item: string) {
       sendEmail(JSON.parse(completion.data.choices[0].message?.function_call?.arguments ?? "{}"));
     }
   } catch (err: any) {
-    console.log(err.message)
+    console.error('Error in checkSuitability:', err.message);
   }
   return;
 }
