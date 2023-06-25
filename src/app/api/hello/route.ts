@@ -33,7 +33,6 @@ async function checkForNewItems(feedUrl: string, interval: number) {
 }
 
 async function checkSuitability(item: string) {
-  console.log(JSON.stringify(item))
   try {
     const completion = await openai.createChatCompletion({
       "model": "gpt-3.5-turbo-0613",
@@ -124,7 +123,7 @@ async function sendEmail({reasoning, proposal,
     job_summary: string,
     job_url: string}) {
     resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: 'finn@finnelliott.com',
         to: 'finn@finnelliott.com',
         subject: 'Hello World',
         html: JSON.stringify({
