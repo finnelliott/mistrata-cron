@@ -149,6 +149,10 @@ Industry: Web Design & Development
           "parameters": {
             "type": "object",
             "properties": {
+              "suitable": {
+                "type": "boolean",
+                "description": "Whether or not the user is suitable for the job."
+              },
               "proposal": {
                 "type": "string",
                 "description": "Only provide a proposal if the user is suitable for the job. The proposal should follow a format similar to the following:\nHi, I'm a web designer and developer based in Gloucester, UK.\n\nI have strong creative design skills and am highly attentive to the technical details of the websites I deliver. The best examples of my creative work can be found attached. A great example of my ability to deliver high-quality websites is a demo site which I use when selling to dental clients: https: //demo.mistrata.com. It's responsive, fast and adheres to all of the SEO and accessibility best practices. I have previously used Squarespace and am so far confident that your needs can be met adequately on the platform.\n\nHopefully, these examples give you an idea of my creativity, attention to detail and ability to deliver high-performance websites. I have availability to work with you on an ongoing basis and would appreciate the opportunity to discuss your needs further.\n\nThanks,\n\nFinn"
@@ -170,6 +174,9 @@ Industry: Web Design & Development
               }
             },
             "required": [
+              "suitable",
+              "proposal",
+              "reasoning",
               "job_summary",
               "job_url"
             ]
@@ -198,13 +205,15 @@ Industry: Web Design & Development
 }
 
 async function sendEmail({
+  suitable,
   reasoning, 
   proposal,
   job_summary, 
   job_url
 }: { 
-  reasoning: string | undefined,
-  proposal: string | undefined,
+  suitable: boolean,
+  reasoning: string,
+  proposal: string,
   job_summary: string,
   job_url: string}) {
     await resend.emails.send(
@@ -214,6 +223,7 @@ async function sendEmail({
         subject: `New Upwork Job Available: ${job_summary.slice(0, 25)}`,
         // @ts-ignore
         react: EmailTemplate({
+            suitable,
             reasoning,
             proposal,
             job_summary,

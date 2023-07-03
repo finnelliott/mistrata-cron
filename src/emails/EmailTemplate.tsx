@@ -1,13 +1,15 @@
 import * as React from "react";
 
 interface EmailTemplateProps {
-  reasoning: string | undefined,
-  proposal: string | undefined,
+  suitable: boolean,
+  reasoning: string,
+  proposal: string,
   job_summary: string,
   job_url: string
 }
 
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
+  suitable,
   reasoning,
   proposal,
   job_summary,
@@ -15,7 +17,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
 }) => (
   <div>
     {
-      reasoning ? (
+      !suitable ? (
         <>
           <h1>Unsuitable Upwork Job</h1>
           <h2>Job</h2>
