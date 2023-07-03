@@ -1,6 +1,7 @@
 import { Parser } from 'xml2js';
 import { Resend } from 'resend';
 import { Configuration, OpenAIApi } from "openai";
+import { EmailTemplate } from '@/emails/EmailTemplate';
 
 if (!process.env.OPENAI_API_KEY) {
   throw new Error('OPENAI_API_KEY environment variable not set.');
@@ -27,18 +28,26 @@ async function fetchFeedData(feedUrl: string) {
 }
 
 function filterNewItems(items: any[], interval: number) {
-  const currentDate = new Date();
   return items.filter(item => {
-    const itemDate = new Date(item.pubDate[0]);
-    const timeDifference = currentDate.getTime() - itemDate.getTime();
+    const timeDifference = new Date().getTime() - new Date(item.pubDate[0]).getTime();
     return timeDifference <= interval;
   });
 }
 
-async function checkForNewItems(feedUrl: string, interval: number) {
+async function getAllData(feedUrls: string[]) {
+  const allData: any[] = [];
+  for (const feedUrl of feedUrls) {
+    const data = await fetchFeedData(feedUrl);
+    allData.push(...data);
+  }
+  return allData;
+}
+
+async function checkForNewItems(feedUrls: string[], interval: number) {
   try {
-    const items = await fetchFeedData(feedUrl);
+    let items = await getAllData(feedUrls);
     const newItems = filterNewItems(items, interval);
+    console.log(newItems.length)
     for (const item of newItems) {
       await checkSuitability(item);
     }
@@ -200,7 +209,7 @@ Evaluate the user's suitability for the job description they provide. If they ar
           from: 'finn@finnelliott.com',
           to: 'finn@finnelliott.com',
           subject: 'No function call found',
-          html: "No function call found."
+          html: `${JSON.stringify(completion.data.choices[0].message)}`
         }
       );
     }
@@ -223,8 +232,9 @@ async function sendEmail({
       {
         from: 'finn@finnelliott.com',
         to: 'finn@finnelliott.com',
-        subject: `New job: ${job_summary.slice(0, 25)}`,
-        html: JSON.stringify({
+        subject: `New Upwork Job Available: ${job_summary.slice(0, 25)}`,
+        // @ts-ignore
+        react: EmailTemplate({
             reasoning,
             proposal,
             job_summary,
@@ -238,11 +248,18 @@ async function sendEmail({
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
-  const feedUrl = 'https://www.upwork.com/ab/feed/jobs/rss?q=web+design&user_location_match=1&sort=recency&paging=0%3B10&api_params=1&securityToken=1480d28b8c9192afef5994366f86aeb9593b6b3caaac0164e0959a94754865db67903bebb8e572475fb3c337fe1dcd6e5136758579fa2db13350b0dd9b5614ce&userUid=1566080122037977088&orgUid=1566080122037977089';
+  const feedUrls = 
+  [
+    'https://www.upwork.com/ab/feed/jobs/rss?q=web+design&user_location_match=1&sort=recency&paging=0%3B10&api_params=1&securityToken=1480d28b8c9192afef5994366f86aeb9593b6b3caaac0164e0959a94754865db67903bebb8e572475fb3c337fe1dcd6e5136758579fa2db13350b0dd9b5614ce&userUid=1566080122037977088&orgUid=1566080122037977089',
+    'https://www.upwork.com/ab/feed/jobs/rss?q=next.js&sort=recency&job_type=hourly%2Cfixed&contractor_tier=2%2C3&proposals=0-4&duration_v3=week%2Cmonth%2Csemester%2Congoing&hourly_rate=40-&location=Americas%2CEurope%2COceania&paging=0%3B10&api_params=1&securityToken=1480d28b8c9192afef5994366f86aeb9593b6b3caaac0164e0959a94754865db67903bebb8e572475fb3c337fe1dcd6e5136758579fa2db13350b0dd9b5614ce&userUid=1566080122037977088&orgUid=1566080122037977089',
+    'https://www.upwork.com/ab/feed/jobs/rss?q=webflow&sort=recency&job_type=hourly%2Cfixed&contractor_tier=2%2C3&proposals=0-4&duration_v3=week%2Cmonth%2Csemester%2Congoing&hourly_rate=40-&location=Americas%2CEurope%2COceania&paging=0%3B10&api_params=1&securityToken=1480d28b8c9192afef5994366f86aeb9593b6b3caaac0164e0959a94754865db67903bebb8e572475fb3c337fe1dcd6e5136758579fa2db13350b0dd9b5614ce&userUid=1566080122037977088&orgUid=1566080122037977089',
+
+
+  ]
   const interval = 30 * 60 * 1000; // 30 minutes in milliseconds
 
   try {
-    await checkForNewItems(feedUrl, interval);
+    await checkForNewItems(feedUrls, interval);
     return new Response('Hello, Next.js!') 
   } catch (error) {
     console.error('Error in GET:', error);
