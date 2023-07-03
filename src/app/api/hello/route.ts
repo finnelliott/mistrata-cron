@@ -64,6 +64,10 @@ async function checkSuitability(item: string) {
         {
           "role": "system",
           "content": `The user has the following profile:
+Name: Finn Elliott
+Location: Gloucester, UK
+Industry: Web Design & Development
+
 ---
 **Educational Background:**
 
@@ -131,9 +135,7 @@ async function checkSuitability(item: string) {
 - Seeking contracts with small businesses to improve their online presence
 - Creating new websites or web applications using Next.js, including content-based solutions with a CMS, SaaS solutions, or eCommerce solutions
 - Open to contracts outside of this realm if the required skill exists within abilities
-
----
-Evaluate the user's suitability for the job description they provide. If they are suitable, send them a suggested proposal via email. If they are not suitable, send them an email with the reasoning why they are not suitable.`
+`
         },
         {
           "role": "user",
@@ -142,18 +144,22 @@ Evaluate the user's suitability for the job description they provide. If they ar
       ],
       "functions": [
         {
-          "name": "send_suggested_proposal_email",
-          "description": "This function is used if the user is suitable for the job description provided. The function sends an email to the user with a suggested proposal which they could send in order to apply for the given job.",
+          "name": "send_email",
+          "description": "This function is used to notify (via email) the user if they are suitable for the job description provided. If they are suitable, the function sends an email to the user with a suggested proposal which they could send in order to apply for the given job. If they are not suitable, it sends them the reason why they are not suitable.",
           "parameters": {
             "type": "object",
             "properties": {
               "proposal": {
                 "type": "string",
-                "description": "The proposal should follow a format similar to the following:\nHi, I'm a web designer and developer based in Gloucester, UK.\n\nI have strong creative design skills and am highly attentive to the technical details of the websites I deliver. The best examples of my creative work can be found attached. A great example of my ability to deliver high-quality websites is a demo site which I use when selling to dental clients: https: //demo.mistrata.com. It's responsive, fast and adheres to all of the SEO and accessibility best practices. I have previously used Squarespace and am so far confident that your needs can be met adequately on the platform.\n\nHopefully, these examples give you an idea of my creativity, attention to detail and ability to deliver high-performance websites. I have availability to work with you on an ongoing basis and would appreciate the opportunity to discuss your needs further.\n\nThanks,\n\nFinn"
+                "description": "Only provide a proposal if the user is suitable for the job. The proposal should follow a format similar to the following:\nHi, I'm a web designer and developer based in Gloucester, UK.\n\nI have strong creative design skills and am highly attentive to the technical details of the websites I deliver. The best examples of my creative work can be found attached. A great example of my ability to deliver high-quality websites is a demo site which I use when selling to dental clients: https: //demo.mistrata.com. It's responsive, fast and adheres to all of the SEO and accessibility best practices. I have previously used Squarespace and am so far confident that your needs can be met adequately on the platform.\n\nHopefully, these examples give you an idea of my creativity, attention to detail and ability to deliver high-performance websites. I have availability to work with you on an ongoing basis and would appreciate the opportunity to discuss your needs further.\n\nThanks,\n\nFinn"
+              },
+              "reasoning": {
+                "type": "string",
+                "description": "Only provide reasoning if the user is not suitable for the job. A brief explanation of why the user is not suitable for the job."
               },
               "job_summary": {
                 "type": "string",
-                "description": "A summary of the job description."
+                "description": "A detailed summary of the job description including location, payment and technologies involved."
               },
               "job_url": {
                 "type": "string",
@@ -164,42 +170,15 @@ Evaluate the user's suitability for the job description they provide. If they ar
               }
             },
             "required": [
-              "proposal",
               "job_summary",
               "job_url"
             ]
           }
         },
-        {
-          "name": "send_unsuitability_email",
-          "description": "This function is used if the user is not suitable for the job description provided. The function sends an email to the user with the reasoning why they are not suitable for the given job.",
-          "parameters": {
-            "type": "object",
-            "properties": {
-              "reasoning": {
-                "type": "string",
-                "description": "A brief explanation of why the user is not suitable for the job."
-              },
-              "job_summary": {
-                "type": "string",
-                "description": "A summary of the job description."
-              },
-              "job_url": {
-                "type": "string",
-                "description": "The URL of the job description."
-              },
-              "unit": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "reasoning",
-              "job_summary",
-              "job_url"
-            ]
-          }
-        }
-      ]
+      ],
+      function_call: {
+        name: 'send_email',
+      }
     });
     if (completion.data.choices[0].message?.function_call?.arguments) {
       await sendEmail(JSON.parse(completion.data.choices[0].message?.function_call?.arguments));
@@ -256,7 +235,7 @@ export async function GET(request: Request) {
 
 
   ]
-  const interval = 30 * 60 * 1000; // 30 minutes in milliseconds
+  const interval = 60 * 60 * 1000; // 30 minutes in milliseconds
 
   try {
     await checkForNewItems(feedUrls, interval);
