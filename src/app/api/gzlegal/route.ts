@@ -25,8 +25,10 @@ export async function GET() {
           work_samples: setup[client].work_samples
         });
         if (!proposal) throw new Error('No proposal generated')
-        sendProposalEmail({ ...proposal, send_to: setup[client].send_to })
+        sendProposalEmail({ ...proposal, send_to: setup[client].send_to, client: setup[client].name })
       }
+    } else {
+        console.log('No new items')
     }
     return new Response('Hello, Next.js!') 
   } catch (error) {

@@ -33,13 +33,17 @@ export async function generateProposal({
         "functions": [
           {
             "name": "generate_proposal",
-            "description": "This function is used to notify (via email) the user if they are suitable for the job description provided. If they are suitable, the function sends an email to the user with a suggested proposal which they could send in order to apply for the given job. If they are not suitable, it sends them the reason why they are not suitable.",
+            "description": "This function is used to generate a proposal to the job they've provided. The proposal is based on the job description, their profile, work samples, and desired proposal format.",
             "parameters": {
               "type": "object",
               "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "A short and descriptive title for the job. No more than 50 characters."
+                },
                 "suitability": {
                   "type": "string",
-                  "description": "An indication of how suitable the user is for the job. This should be one of the following: 'Suitable', 'Unsuitable', 'Maybe'."
+                  "description": "An indication of how suitable the user is for the job. This should be one of the following: 'Suitable', 'Unsuitable', 'Maybe Suitable'. Only return 'Suitable' if they meet the majority of the requirements for the job. "
                 },
                 "proposal": {
                   "type": "string",
@@ -54,7 +58,7 @@ export async function generateProposal({
                 },
                 "unsuitability_reasoning": {
                   "type": "string",
-                  "description": "If the user is unsuitable for the job, provide a brief explanation of why."
+                  "description": "If there are any concerns about the users suitability for the job, provide a brief explanation of why."
                 },
                 "job_summary": {
                   "type": "string",

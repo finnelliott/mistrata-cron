@@ -23,10 +23,11 @@ export async function checkForNewItems(feedUrls: string[], interval: number) {
             items.push(...data);
         }
         const newItems = filterNewItems(items, interval);
-        return newItems
+        return newItems.filter((value, index, self) => 
+            self.findIndex(item => item.title[0] === value.title[0]) === index
+        );
     } catch (error) {
       console.error('Error in checkForNewItems:', error);
-    } finally {
-        return [];
+      return [];
     }
 }
