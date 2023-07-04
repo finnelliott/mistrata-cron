@@ -245,7 +245,7 @@ export async function GET(request: Request) {
 
 
   ]
-  const interval = 60 * 60 * 1000; // 30 minutes in milliseconds
+  const interval = 30 * 60 * 1000; // 30 minutes in milliseconds
 
   try {
     await checkForNewItems(feedUrls, interval);
