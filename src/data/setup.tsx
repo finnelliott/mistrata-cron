@@ -93,7 +93,38 @@ Industry: Web Design & Development
             'https://www.upwork.com/ab/feed/jobs/rss?q=corporate+lawyer&sort=recency&user_location_match=1&job_type=hourly%2Cfixed&contractor_tier=1%2C2%2C3&duration_v3=week%2Cmonth%2Csemester%2Congoing&paging=0%3B10&api_params=1&securityToken=1480d28b8c9192afef5994366f86aeb9593b6b3caaac0164e0959a94754865db67903bebb8e572475fb3c337fe1dcd6e5136758579fa2db13350b0dd9b5614ce&userUid=1566080122037977088&orgUid=1566080122037977089',
             'https://www.upwork.com/ab/feed/jobs/rss?q=lawyer&sort=recency&user_location_match=1&job_type=hourly%2Cfixed&contractor_tier=1%2C2%2C3&duration_v3=week%2Cmonth%2Csemester%2Congoing&paging=0%3B10&api_params=1&securityToken=1480d28b8c9192afef5994366f86aeb9593b6b3caaac0164e0959a94754865db67903bebb8e572475fb3c337fe1dcd6e5136758579fa2db13350b0dd9b5614ce&userUid=1566080122037977088&orgUid=1566080122037977089'
         ],
-        profile: ``,
+        profile: `GZ Legal is a commercial law firm offering the following services: 
+Collaboration Agreement
+Consultant agreement
+Contract for service
+Cookies Policies
+Director’s Service Agreement
+Employee Contracts
+Employee Privacy Notice
+Franchising Agreement
+Influencer Contract
+Joint Venture Agreement
+Mobile App End User License Agreement
+Mobile App Privacy Policy
+Non Disclosure Agreement
+Partnership Agreement
+Practitioner Contract
+Recruitment Agency Agreement
+Referral Fee Agreement
+Sales Agency Agreement
+Self Employed Contract
+Settlement Agreement for Commercial Dispute
+Share Purchase Agreement
+Shareholder Agreement
+Software Licensing Agreement
+Terms & Conditions Goods B2C
+Terms & Conditions Goods for B2B
+Terms & Conditions Services B2B
+Terms & Conditions Services B2C
+Website Acceptable Usage Policy
+Website Privacy Policy
+Website Terms and Conditions
+Zero hours contract`,
         work_samples: ``,
         proposal_format: ``
     }
