@@ -1,11 +1,11 @@
 {
     "crons": [
       {
-        "path": "/api/finnelliott",
+        "path": "/api/check-upwork-rss/finnelliott",
         "schedule": "*/30 * * * *"
       },
       {
-        "path": "/api/gzlegal",
+        "path": "/api/check-upwork-rss/gzlegal",
         "schedule": "*/30 * * * *"
       }
     ]

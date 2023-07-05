@@ -1,6 +1,6 @@
 if (!process.env.OPENAI_API_KEY) {
     throw new Error('OPENAI_API_KEY environment variable not set.');
-  }
+}
 import GeneratedProposal from "@/types/generatedProposal";
 import { Configuration, OpenAIApi } from "openai";
 
