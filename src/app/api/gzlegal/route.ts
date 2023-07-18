@@ -1,7 +1,13 @@
 import setup from "@/data/setup";
+import { GZTemplate } from "@/emails/gz-template";
 import { checkForNewItems } from "@/lib/checkForNewItems";
-import { generateProposal } from "@/lib/generateProposal";
-import { sendProposalEmail } from "@/lib/sendProposalEmail";
+import { checkIfIsGZSuitable } from "@/lib/checkIfIsGZSuitable";
+import { Resend } from "resend";
+if (!process.env.RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY environment variable not set.');
+}
+  
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const dynamic = 'force-dynamic';
 const client = 'gzlegal';
@@ -18,14 +24,34 @@ export async function GET() {
     const newItems = await checkForNewItems(feedUrls, interval);
     if (newItems.length > 0) {
       for (let i = 0; i < newItems.length; i++) {
-        const proposal = await generateProposal({
-          item: newItems[i], 
-          profile: setup[client].profile, 
-          proposal_format: setup[client].proposal_format,
-          work_samples: setup[client].work_samples
-        });
-        if (!proposal) throw new Error('No proposal generated')
-        sendProposalEmail({ ...proposal, send_to: setup[client].send_to, client: setup[client].name })
+        const { is_suitable, job_summary, job_url } = await checkIfIsGZSuitable(newItems[i])
+        if (is_suitable) {
+          await resend.emails.send(
+            {
+              from: 'finn@finnelliott.com',
+              to: 'finn@finnelliott.com',
+              subject: `GZ Legal – Upwork Job`,
+              // @ts-ignore
+              react: GZTemplate({
+                job_summary,
+                job_url
+              })
+            }
+          );
+        } else {
+          await resend.emails.send(
+            {
+              from: 'finn@finnelliott.com',
+              to: 'finn@finnelliott.com',
+              subject: `Unsuitable – GZ Legal – Upwork Job`,
+              // @ts-ignore
+              react: GZTemplate({
+                job_summary,
+                job_url
+              })
+            }
+          );
+        }
       }
     } else {
         console.log('No new items')
