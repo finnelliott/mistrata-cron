@@ -5,7 +5,7 @@ if (!process.env.RESEND_API_KEY) {
   
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export default async function POST(request: Request) {
+export async function POST(request: Request) {
     const { TextBody } = await request.json();
     await resend.emails.send(
         {
