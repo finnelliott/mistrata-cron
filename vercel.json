@@ -3,6 +3,10 @@
       {
         "path": "/api/gzlegal",
         "schedule": "*/30 * * * *"
+      },
+      {
+        "path": "/api/check-upwork-ress/finnelliott",
+        "schedule": "*/30 * * * *"
       }
     ]
 }
