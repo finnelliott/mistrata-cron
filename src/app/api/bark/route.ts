@@ -6,13 +6,13 @@ if (!process.env.RESEND_API_KEY) {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
-    const { TextBody } = await request.json();
+    const { TextBody, HtmlBody } = await request.json();
     await resend.emails.send(
         {
           from: 'finn@finnelliott.com',
           to: 'finn@finnelliott.com',
           subject: `Finn Elliott – Bark Job`,
-          text: TextBody
+          text: HtmlBody ?? TextBody
         }
       );
     return new Response('Hello, Next.js!')
