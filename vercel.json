@@ -5,7 +5,7 @@
         "schedule": "*/30 * * * *"
       },
       {
-        "path": "/api/check-upwork-rss/finnelliott",
+        "path": "/api/finnelliott",
         "schedule": "*/30 * * * *"
       }
     ]
