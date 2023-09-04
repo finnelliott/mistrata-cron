@@ -22,6 +22,7 @@ export async function checkForNewItems(feedUrls: string[], interval: number) {
             const data = await fetchFeedData(feedUrl);
             items.push(...data);
         }
+        console.log(items.length)
         const newItems = filterNewItems(items, interval);
         return newItems.filter((value, index, self) => 
             self.findIndex(item => item.title[0] === value.title[0]) === index
